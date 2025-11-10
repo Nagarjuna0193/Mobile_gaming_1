@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { StateCreator } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type ThemeMode = 'light' | 'dark';
