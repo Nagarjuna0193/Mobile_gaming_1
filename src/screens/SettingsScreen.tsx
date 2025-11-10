@@ -1,18 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet, Switch } from 'react-native';
 import { useGameStore } from '../store/gameStore';
+import { lightColors, darkColors } from '../theme/colors';
 
 const SettingsScreen: React.FC = () => {
   const { soundEnabled, toggleSound, theme, toggleTheme } = useGameStore();
+  const colors = theme === 'dark' ? darkColors : lightColors;
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }] }>
+      <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
       <View style={styles.row}>
-        <Text>Sound</Text>
+        <Text style={{ color: colors.text }}>Sound</Text>
         <Switch value={soundEnabled} onValueChange={toggleSound} />
       </View>
       <View style={styles.row}>
-        <Text>Dark Mode</Text>
+        <Text style={{ color: colors.text }}>Dark Mode</Text>
         <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
       </View>
     </View>

@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useGameStore } from '../store/gameStore';
 import { lightColors, darkColors } from '../theme/colors';
+import TimerBar from '../components/TimerBar';
+import { playClick, loadSounds } from '../utils/sound';
+import * as Haptics from 'expo-haptics';
 
 const GamePlayScreen: React.FC = () => {
   const { score, timeLeft, isRunning, startGame, tap, tick, reset } = useGameStore();
@@ -16,17 +19,32 @@ const GamePlayScreen: React.FC = () => {
     };
   }, [isRunning, tick]);
 
+  // preload sound
+  useEffect(() => {
+    loadSounds();
+  }, []);
+
   const themeMode = useGameStore((s) => s.theme);
   const colors = themeMode === 'dark' ? darkColors : lightColors;
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <TimerBar duration={useGameStore((s) => s.duration)} timeLeft={timeLeft} />
       <Text style={[styles.timer, { color: colors.text }]}>Time: {timeLeft}</Text>
       <Text style={[styles.score, { color: colors.text }]}>Score: {score}</Text>
       {!isRunning && (
         <Button title="Start Game" onPress={startGame} />
       )}
       {isRunning && (
-        <TouchableOpacity style={[styles.tapButton, { backgroundColor: colors.primary }]} onPress={tap}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel="Tap to score"
+          style={[styles.tapButton, { backgroundColor: colors.primary }]}
+          onPress={async () => {
+            tap();
+            await playClick(useGameStore.getState().soundEnabled);
+            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }}
+        >
           <Text style={styles.tapText}>TAP!</Text>
         </TouchableOpacity>
       )}
