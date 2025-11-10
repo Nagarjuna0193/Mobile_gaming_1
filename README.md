@@ -4,11 +4,13 @@ A simple tap-based scoring mobile game built with Expo React Native and TypeScri
 
 ## Features
 - Tap to gain score within countdown timer
-- High score persistence (AsyncStorage) (implemented via Zustand persist)
+- Animated timer bar (Reanimated)
+- Tap sound (expo-av) and haptics (expo-haptics) with sound toggle
+- High score persistence (AsyncStorage) via Zustand persist
 - Settings: sound toggle & theme (light/dark) with navigation theme switching
 - Navigation: Menu, Gameplay, High Scores, Settings
 - Global state using Zustand (persisted slices: soundEnabled, theme, highScores, duration)
-- Jest tests for core logic (store actions)
+- Jest tests for core logic (store actions) with AsyncStorage mock
 
 ## Scripts
 - `npm start` - start Expo bundler
@@ -20,6 +22,8 @@ A simple tap-based scoring mobile game built with Expo React Native and TypeScri
 ```powershell
 npm install
 npm start
+# If PowerShell blocks npm, run:
+cmd /c npm start
 ```
 Choose platform (Android/iOS/Web) in Expo CLI.
 

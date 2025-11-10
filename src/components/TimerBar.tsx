@@ -16,7 +16,7 @@ const TimerBar: React.FC<Props> = ({ duration, timeLeft }) => {
   }, [timeLeft, duration, progress]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scaleX: progress.value }],
+    width: `${Math.max(0, Math.min(1, progress.value)) * 100}%`,
   }));
 
   return (
@@ -36,10 +36,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   fill: {
-    flex: 1,
+    height: '100%',
+    width: '100%',
     backgroundColor: '#4e8ef7',
-    transform: [{ scaleX: 1 }],
-    transformOrigin: 'left center',
   },
 });
 
