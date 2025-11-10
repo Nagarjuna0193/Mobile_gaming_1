@@ -8,6 +8,8 @@ import * as Haptics from 'expo-haptics';
 
 const GamePlayScreen: React.FC = () => {
   const { score, timeLeft, isRunning, startGame, tap, tick, reset } = useGameStore();
+  const comboMultiplier = useGameStore((s) => s.comboMultiplier);
+  const hapticsEnabled = useGameStore((s) => s.hapticsEnabled);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
@@ -31,6 +33,11 @@ const GamePlayScreen: React.FC = () => {
       <TimerBar duration={useGameStore((s) => s.duration)} timeLeft={timeLeft} />
       <Text style={[styles.timer, { color: colors.text }]}>Time: {timeLeft}</Text>
       <Text style={[styles.score, { color: colors.text }]}>Score: {score}</Text>
+      {isRunning && comboMultiplier > 1 && (
+        <Text style={[styles.multiplier, { color: colors.primary }]}>
+          Combo x{comboMultiplier}
+        </Text>
+      )}
       {!isRunning && (
         <Button title="Start Game" onPress={startGame} />
       )}
@@ -42,7 +49,9 @@ const GamePlayScreen: React.FC = () => {
           onPress={async () => {
             tap();
             await playClick(useGameStore.getState().soundEnabled);
-            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            if (hapticsEnabled) {
+              void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }
           }}
         >
           <Text style={styles.tapText}>TAP!</Text>
@@ -57,6 +66,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 24 },
   timer: { fontSize: 24 },
   score: { fontSize: 24, fontWeight: 'bold' },
+  multiplier: { fontSize: 20, fontWeight: '600' },
   tapButton: { backgroundColor: '#4e8ef7', padding: 40, borderRadius: 100 },
   tapText: { color: '#fff', fontSize: 32, fontWeight: 'bold' }
 });

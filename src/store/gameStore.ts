@@ -14,7 +14,12 @@ interface GameState {
   // Settings and persisted state
   soundEnabled: boolean;
   theme: ThemeMode;
+  hapticsEnabled: boolean;
   highScores: number[];
+
+  // Combo mechanics (ephemeral)
+  comboMultiplier: number;
+  lastTapAt: number | null;
 
   // Actions
   startGame: () => void;
@@ -25,6 +30,7 @@ interface GameState {
   addHighScore: () => void;
   toggleSound: () => void;
   toggleTheme: () => void;
+  toggleHaptics: () => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -40,12 +46,23 @@ export const useGameStore = create<GameState>()(
       isRunning: false,
       soundEnabled: true,
       theme: 'light',
+      hapticsEnabled: true,
       highScores: [],
+      comboMultiplier: 1,
+      lastTapAt: null,
 
       startGame: () => set({ isRunning: true, score: 0, timeLeft: get().duration }),
       tap: () => {
         if (!get().isRunning) return;
-        set({ score: get().score + 1 });
+        const now = Date.now();
+        const prev = get().lastTapAt;
+        const withinWindow = typeof prev === 'number' ? now - prev <= 400 : false;
+        const nextMultiplier = withinWindow ? Math.min(get().comboMultiplier + 1, 5) : 1;
+        set({
+          score: get().score + nextMultiplier,
+          comboMultiplier: nextMultiplier,
+          lastTapAt: now,
+        });
       },
       tick: () => {
         if (!get().isRunning) return;
@@ -57,10 +74,10 @@ export const useGameStore = create<GameState>()(
         }
       },
       endGame: () => {
-        set({ isRunning: false });
+        set({ isRunning: false, comboMultiplier: 1, lastTapAt: null });
         get().addHighScore();
       },
-      reset: () => set({ score: 0, timeLeft: get().duration, isRunning: false }),
+      reset: () => set({ score: 0, timeLeft: get().duration, isRunning: false, comboMultiplier: 1, lastTapAt: null }),
       addHighScore: () => {
         const s = get().score;
         if (s <= 0) return;
@@ -69,6 +86,7 @@ export const useGameStore = create<GameState>()(
       },
       toggleSound: () => set({ soundEnabled: !get().soundEnabled }),
       toggleTheme: () => set({ theme: get().theme === 'light' ? 'dark' : 'light' }),
+      toggleHaptics: () => set({ hapticsEnabled: !get().hapticsEnabled }),
     }),
     {
       name: 'mobile-game-storage',
@@ -77,6 +95,7 @@ export const useGameStore = create<GameState>()(
       partialize: (state: GameState) => ({
         soundEnabled: state.soundEnabled,
         theme: state.theme,
+        hapticsEnabled: state.hapticsEnabled,
         highScores: state.highScores,
         duration: state.duration,
       }),

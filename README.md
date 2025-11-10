@@ -1,5 +1,8 @@
 # Mobile Game App
 
+[![Deploy Web to GitHub Pages](https://github.com/Nagarjuna0193/Mobile_gaming_1/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/Nagarjuna0193/Mobile_gaming_1/actions/workflows/gh-pages.yml)
+[![Pages](https://img.shields.io/github/pages/builds/Nagarjuna0193/Mobile_gaming_1?label=github%20pages)](https://Nagarjuna0193.github.io/Mobile_gaming_1)
+
 A simple tap-based scoring mobile game built with Expo React Native and TypeScript.
 
 ## Features
@@ -25,6 +28,10 @@ npm start
 # If PowerShell blocks npm, run:
 cmd /c npm start
 ```
+
+## Live (Web)
+- GitHub Pages: https://Nagarjuna0193.github.io/Mobile_gaming_1
+- CI status: see the badge above. First deployment may take a minute after pushing to `main`.
 Choose platform (Android/iOS/Web) in Expo CLI.
 
 ## Project Structure
