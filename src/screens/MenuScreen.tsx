@@ -1,11 +1,22 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useGameStore } from '../store/gameStore';
+import { lightColors, darkColors } from '../theme/colors';
 
-export const MenuScreen: React.FC<NativeStackScreenProps<any>> = ({ navigation }) => {
+type RootStackParamList = {
+  Menu: undefined;
+  GamePlay: undefined;
+  HighScores: undefined;
+  Settings: undefined;
+};
+
+export const MenuScreen: React.FC = ({ navigation }: NativeStackScreenProps<RootStackParamList, 'Menu'>) => {
+  const themeMode = useGameStore((s) => s.theme);
+  const colors = themeMode === 'dark' ? darkColors : lightColors;
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Mobile Tap Game</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>Mobile Tap Game</Text>
       <Button title="Play" onPress={() => navigation.navigate('GamePlay')} />
       <Button title="High Scores" onPress={() => navigation.navigate('HighScores')} />
       <Button title="Settings" onPress={() => navigation.navigate('Settings')} />

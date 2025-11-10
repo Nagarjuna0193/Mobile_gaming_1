@@ -11,7 +11,7 @@ import { useGameStore } from './src/store/gameStore';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const themeMode = useGameStore(s => s.theme);
+  const themeMode = useGameStore((s) => s.theme);
   return (
     <NavigationContainer theme={themeMode === 'dark' ? DarkTheme : DefaultTheme}>
       <StatusBar style={themeMode === 'dark' ? 'light' : 'dark'} />
